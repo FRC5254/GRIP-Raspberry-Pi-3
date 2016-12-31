@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 """
-Sample program that uses a generated GRIP pipeline to detect red areas in an image and publish them to NetworkTables.
+Sample program that uses a generated GRIP pipeline and publish them to NetworkTables.
 """
 
 import cv2
@@ -9,7 +9,11 @@ import urllib
 import networktables
 from networktables import NetworkTable
 from networktables2 import NumberArray
-from ip_GRIP import GripPipeline
+
+#TODO: change this to your grip pipeline
+#from "PIPELINE_FILE_NAME" import "CLASS_NAME"
+from grip import GripPipeline
+
 import datetime
 from time import sleep
 
@@ -35,7 +39,6 @@ def extra_processing(pipeline):
         center_y_positions.append(y + h / w)
         widths.append(w)
         heights.append(y)
-    print(center_x_positions)
     # Publish to the '/vision' network table
     table = NetworkTable.getTable("/vision")
     table.putValue("centerX", NumberArray.from_list(center_x_positions))
@@ -49,21 +52,22 @@ def extra_processing(pipeline):
 
 def main():
     print('Initializing NetworkTables')
-    NetworkTable.setIPAddress("10.52.55.98")
+    #TODO: change to ip address for your roboRIO
+    NetworkTable.setIPAddress("10.52.54.98")  #IP address of roboRIO
     NetworkTable.setClientMode()
     NetworkTable.initialize()
 
 
     print('Creating video capture')
-    cap = cv2.VideoCapture("http://10.52.55.3/mjpg/video.mjpg")
-    print("here")
-   
+    #TODO: pick input method and set address for IP camera
+    #USB Camera
+    cap = cv2.VideoCapture(0)
+    #IP Camera
+    #cap = cv2.VideoCapture("http://10.52.54.3/mjpg/video.mjpg") #address of video stream
+    
     bytes = ''
     first = False
-
-
-
-
+    
     print('Creating pipeline')
     pipeline = GripPipeline()
 

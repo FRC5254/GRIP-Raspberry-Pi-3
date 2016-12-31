@@ -1,7 +1,7 @@
 #!/usr/bin/python3
 
 """
-Sample program that uses a generated GRIP pipeline to detect red areas in an image and publish them to NetworkTables.
+Detects stronghold goals using a usb camera plugged into raspberry pi
 """
 
 import cv2
@@ -16,8 +16,8 @@ def extra_processing(pipeline):
     :param pipeline: the pipeline that just processed an image
     :return: None
     """
-    center_x_positions = [0]
-    center_y_positions = [0]
+    center_x_positions = []
+    center_y_positions = []
     widths = []
     heights = []
 
@@ -28,13 +28,12 @@ def extra_processing(pipeline):
         center_y_positions.append(y + h / w)
         widths.append(w)
         heights.append(y)
-    print(center_x_positions)	
-    # Publish to the '/vision/red_areas' network table
-    #table = NetworkTable.getTable('/vision/targets')
-    #table.putNumber('x', center_x_positions[0])
-    #table.putNumberArray('y', center_y_positions)
-    #table.putNumberArray('width', widths)
-    #table.putNumberArray('height', heights)
+    # Publish to the '/vision' network table
+    table = NetworkTable.getTable("/vision")
+    table.putValue("centerX", NumberArray.from_list(center_x_positions))
+    table.putValue("centerY", NumberArray.from_list(center_y_positions))
+    table.putValue("width", NumberArray.from_list(widths))
+    table.putValue("height", NumberArray.from_list(heights))
 
 
 def main():

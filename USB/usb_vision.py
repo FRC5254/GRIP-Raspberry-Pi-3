@@ -25,7 +25,7 @@ def extra_processing(pipeline):
     for contour in pipeline.filter_contours_output:
         x, y, w, h = cv2.boundingRect(contour)
         center_x_positions.append(x + w / 2)  # X and Y are coordinates of the top-left corner of the bounding box
-        center_y_positions.append(y + h / w)
+        center_y_positions.append(y + h / 2)
         widths.append(w)
         heights.append(y)
     # Publish to the '/vision' network table
